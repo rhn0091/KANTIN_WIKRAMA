@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:kantin_wk/beranda.dart';
+import 'package:kantin_wk/keranjang.dart';
 
 class Detail extends StatefulWidget {
   final Map<String, dynamic> listdata;
@@ -26,29 +27,34 @@ class _DetailState extends State<Detail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Kantin Wisaga"),
-        centerTitle: true,
-        backgroundColor: Color.fromARGB(118, 103, 188, 182),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Beranda(listdata: {})),
-            );
-          },
+          title: Text("Kantin Wisaga"),
+          centerTitle: true,
+          backgroundColor: Color.fromARGB(118, 103, 188, 182),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Beranda(listdata: {},)),
+              );
+            },
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.person),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.shopping_cart_checkout),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: ((context) => ShoppingCartScreen()))
+                  );
+              },
+            ),
+          ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.shopping_cart_checkout),
-            onPressed: () {},
-          ),
-        ],
-      ),
       body: listdata.isEmpty
           ? Center(child: CircularProgressIndicator())
           : ListView(
@@ -92,11 +98,11 @@ class _DetailState extends State<Detail> {
                       ),
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15)),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                        foregroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 0, 0, 0)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18.0),
-                            side: BorderSide(color: Colors.red),
+                            side: BorderSide(color: Color.fromARGB(255, 120, 194, 204)),
                           ),
                         ),
                       ),
@@ -109,11 +115,11 @@ class _DetailState extends State<Detail> {
                       ),
                       style: ButtonStyle(
                         foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                        backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 120, 194, 204)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero,
-                            side: BorderSide(color: Colors.red),
+                            side: BorderSide(color: Color.fromARGB(255, 120, 194, 204)),
                           ),
                         ),
                       ),

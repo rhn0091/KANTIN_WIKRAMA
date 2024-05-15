@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kantin_wk/detail.dart';
+import 'package:kantin_wk/keranjang.dart';
 import 'dart:convert';
 
 import 'package:kantin_wk/main.dart';
@@ -71,7 +72,12 @@ TextEditingController serch = TextEditingController();
             ),
             IconButton(
               icon: Icon(Icons.shopping_cart_checkout),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: ((context) => ShoppingCartScreen()))
+                  );
+              },
             ),
           ],
         ),
@@ -90,9 +96,9 @@ TextEditingController serch = TextEditingController();
                   ),
                 ),
                 onChanged: (value) {
-                  // Implement your search logic here
+                  
                   setState(() {
-                    // You can filter your listdata based on the search value here
+                    
                   });
                 },
               ),
