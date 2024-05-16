@@ -1,7 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ShoppingCartScreen extends StatefulWidget {
+  final List cartItems;
+
+  const ShoppingCartScreen({Key? key, required this.cartItems}) : super(key: key);
+
   @override
   _ShoppingCartScreenState createState() => _ShoppingCartScreenState();
 }
@@ -11,38 +14,35 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Shopping Cart'),
+        title: Text("Shopping Cart"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); 
+          }
       ),
-      body: EmptyShoppingCartScreen(),
-    );
-  }
-}
-
-class EmptyShoppingCartScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        decoration: BoxDecoration(color: Colors.white),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              "Your shopping cart is empty",
-              style: TextStyle(
-                color: Color(0xFF67778E),
-                fontFamily: 'Roboto-Light', // removed '.ttf' extension
-                fontSize: 20,
-                fontStyle: FontStyle.normal,
+      ),
+      body: ListView.builder(
+        itemCount: widget.cartItems.length,
+        itemBuilder: (context, index) {
+          return Card(
+            child: ListTile(
+              // leading: Image.asset('lib/images/${widget.cartItems[index]}'),
+              title: Text(widget.cartItems[index]['nama_barang']),
+              subtitle: Text("Harga: ${widget.cartItems[index]['harga']}"),
+              trailing: IconButton(
+                icon: Icon(Icons.remove_shopping_cart),
+                onPressed:() {
+                  setState(() {
+                    widget.cartItems.removeAt(index);
+                  });
+                },
               ),
-              textAlign: TextAlign.center,
-            )
-          ],
         ),
+          );
+        },
       ),
     );
+    
   }
 }

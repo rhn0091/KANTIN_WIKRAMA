@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:kantin_wk/login.dart';
+import 'package:kantin_wk/provider.dart';
+import 'package:provider/provider.dart';
+
+import 'login.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => CartProvider(),
+      child: MyApp(),
+    ),
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -32,7 +41,7 @@ class HomePage extends StatelessWidget {
             Container(
               child: Icon(
                 Icons.shopify_rounded,
-                size: size.width * 0.2, // Sesuaikan ukuran ikon
+                size: size.width * 0.2, 
                 color: Colors.blueGrey,
               ),
             ),
@@ -40,7 +49,7 @@ class HomePage extends StatelessWidget {
               child: Text(
                 "KANTIN WISAGA",
                 style: TextStyle(
-                  fontSize: size.width * 0.06, // Sesuaikan ukuran teks
+                  fontSize: size.width * 0.06, 
                   fontWeight: FontWeight.bold,
                   fontStyle: FontStyle.italic,
                   color: Color.fromARGB(255, 0, 0, 0),

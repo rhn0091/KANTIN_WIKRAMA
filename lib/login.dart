@@ -41,7 +41,7 @@ class _LoginPage extends State<LoginPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Beranda(listdata: {}),
+          builder: (context) => Beranda( listdata: {},),
         ),
       );
     } else {

@@ -1,14 +1,20 @@
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: unnecessary_null_comparison, unused_local_variable
 
 import 'package:flutter/material.dart';
-import 'package:kantin_wk/beranda.dart';
 import 'package:kantin_wk/keranjang.dart';
+import 'package:kantin_wk/provider.dart';
+import 'package:provider/provider.dart';
 
 class Detail extends StatefulWidget {
   final Map<String, dynamic> listdata;
   final Image image;
 
-  const Detail({Key? key, required this.listdata, required this.image}) : super(key: key);
+  const Detail(
+      {Key? key,
+      required this.listdata,
+      required this.image,
+      required Null Function(Map<String, dynamic> p1) addToCart})
+      : super(key: key);
 
   @override
   State<Detail> createState() => _DetailState();
@@ -16,6 +22,7 @@ class Detail extends StatefulWidget {
 
 class _DetailState extends State<Detail> {
   late Map<String, dynamic> listdata;
+  late List<Map<String, dynamic>> _cartItems = [];
 
   @override
   void initState() {
@@ -23,111 +30,132 @@ class _DetailState extends State<Detail> {
     listdata = widget.listdata;
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
+    var cartProvider = Provider.of<CartProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-          title: Text("Kantin Wisaga"),
-          centerTitle: true,
-          backgroundColor: Color.fromARGB(118, 103, 188, 182),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+        title: Text("Kantin Wisaga"),
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(118, 103, 188, 182),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); 
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.shopping_cart_checkout),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Beranda(listdata: {},)),
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ShoppingCartScreen(cartItems: _cartItems),
+                ),
               );
             },
           ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.person),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.shopping_cart_checkout),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: ((context) => ShoppingCartScreen()))
-                  );
-              },
-            ),
-          ],
-        ),
+        ],
+      ),
       body: listdata.isEmpty
           ? Center(child: CircularProgressIndicator())
-          : ListView(
+          : Padding(
               padding: EdgeInsets.all(16.0),
-              children: [
-                Center(
-                  child: Container(
-                    height: 250,
-                    child: widget.image,
+              child: ListView(
+                children: [
+                  Center(
+                    child: Container(
+                      height: 250,
+                      child: widget.image,
+                    ),
                   ),
-                ),
-                SizedBox(height: 15),
-                Center(
-                  child: Text(
-                    listdata['nama_barang'],
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  SizedBox(height: 15),
+                  Center(
+                    child: Text(
+                      listdata['nama_barang'],
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    "Stok: ${listdata['jumlah']}",
-                    style: TextStyle(fontSize: 20),
+                  SizedBox(height: 10),
+                  Center(
+                    child: Text(
+                      "Stok: ${listdata['jumlah']}",
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    listdata['deskripsi'],
-                    style: TextStyle(fontSize: 16),
+                  SizedBox(height: 10),
+                  Center(
+                    child: Text(
+                      listdata['deskripsi'],
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                      child: Text(
-                        "Add to cart".toUpperCase(),
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15)),
-                        foregroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 0, 0, 0)),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Color.fromARGB(255, 120, 194, 204),
+                          onPrimary: Colors.black,
+                          shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18.0),
-                            side: BorderSide(color: Color.fromARGB(255, 120, 194, 204)),
                           ),
                         ),
-                      ),
-                      onPressed: () => null,
-                    ),
-                    ElevatedButton(
-                      child: Text(
-                        "Buy now".toUpperCase(),
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                        backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 120, 194, 204)),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
-                            side: BorderSide(color: Color.fromARGB(255, 120, 194, 204)),
-                          ),
+                        onPressed: () {
+                          setState(() {
+                            _cartItems.add({
+                              'nama_barang': listdata['nama_barang'],
+                              'harga': listdata['harga'],
+                              'image': widget.image,
+                            });
+                          });
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Item added to cart"),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Add to cart".toUpperCase(),
+                          style: TextStyle(fontSize: 14),
                         ),
                       ),
-                      onPressed: () => null,
-                    ),
-                  ],
-                ),
-              ],
+                      ElevatedButton(
+                        child: Text(
+                          "Buy now".toUpperCase(),
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        style: ButtonStyle(
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromARGB(255, 120, 194, 204)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(
+                                  color: Color.fromARGB(255, 120, 194, 204)),
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          // Add your Buy Now logic here
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
     );
   }
