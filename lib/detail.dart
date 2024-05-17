@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_null_comparison, unused_local_variable
-
 import 'package:flutter/material.dart';
 import 'package:kantin_wk/keranjang.dart';
 import 'package:kantin_wk/provider.dart';
@@ -9,12 +7,11 @@ class Detail extends StatefulWidget {
   final Map<String, dynamic> listdata;
   final Image image;
 
-  const Detail(
-      {Key? key,
-      required this.listdata,
-      required this.image,
-      required Null Function(Map<String, dynamic> p1) addToCart})
-      : super(key: key);
+  const Detail({
+    Key? key,
+    required this.listdata,
+    required this.image, required Null Function(Map<String, dynamic> p1) addToCart,
+  }) : super(key: key);
 
   @override
   State<Detail> createState() => _DetailState();
@@ -22,7 +19,6 @@ class Detail extends StatefulWidget {
 
 class _DetailState extends State<Detail> {
   late Map<String, dynamic> listdata;
-  late List<Map<String, dynamic>> _cartItems = [];
 
   @override
   void initState() {
@@ -30,7 +26,7 @@ class _DetailState extends State<Detail> {
     listdata = widget.listdata;
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     var cartProvider = Provider.of<CartProvider>(context, listen: false);
     return Scaffold(
@@ -41,7 +37,7 @@ class _DetailState extends State<Detail> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); 
+            Navigator.pop(context);
           },
         ),
         actions: [
@@ -55,8 +51,7 @@ class _DetailState extends State<Detail> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      ShoppingCartScreen(cartItems: _cartItems),
+                  builder: (context) => ShoppingCartScreen(),
                 ),
               );
             },
@@ -79,8 +74,7 @@ class _DetailState extends State<Detail> {
                   Center(
                     child: Text(
                       listdata['nama_barang'],
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -110,19 +104,27 @@ class _DetailState extends State<Detail> {
                           ),
                         ),
                         onPressed: () {
-                          setState(() {
-                            _cartItems.add({
-                              'nama_barang': listdata['nama_barang'],
-                              'harga': listdata['harga'],
-                              'image': widget.image,
-                            });
-                          });
+                          bool itemAlreadyInCart = cartProvider.cartItems.any(
+                              (item) => item['nama_barang'] == listdata['nama_barang']);
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Item added to cart"),
-                            ),
-                          );
+                          if (!itemAlreadyInCart) {
+                            cartProvider.addToCart({
+                              ...listdata,
+                              'quantity': 1,
+                            });
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Item added to cart"),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Item already in cart"),
+                              ),
+                            );
+                          }
                         },
                         child: Text(
                           "Add to cart".toUpperCase(),
@@ -135,12 +137,10 @@ class _DetailState extends State<Detail> {
                           style: TextStyle(fontSize: 14),
                         ),
                         style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
+                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                           backgroundColor: MaterialStateProperty.all<Color>(
                               Color.fromARGB(255, 120, 194, 204)),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                               side: BorderSide(

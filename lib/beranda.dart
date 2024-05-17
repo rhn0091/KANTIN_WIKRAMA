@@ -1,12 +1,9 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kantin_wk/detail.dart';
 import 'package:kantin_wk/keranjang.dart';
-import 'dart:convert';
-
 import 'package:kantin_wk/main.dart';
+import 'dart:convert';
 import 'package:kantin_wk/provider.dart';
 import 'package:provider/provider.dart';
 
@@ -22,10 +19,11 @@ class Beranda extends StatefulWidget {
 class _BerandaState extends State<Beranda> {
   final TextEditingController _searchController = TextEditingController();
   List _listdata = [];
-  
+
   final List<String> items = [
     'lib/images/anggur.jpg',
     'lib/images/piscok.jpg',
+    'lib/images/jus.jpg',
   ];
 
   Future<void> _getdata() async {
@@ -53,14 +51,12 @@ class _BerandaState extends State<Beranda> {
 
   @override
   Widget build(BuildContext context) {
-    var cartProvider = Provider.of<CartProvider>(context);
-    late List<Map<String, dynamic>> _cartItems = [];
-
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return ChangeNotifierProvider(
+      create: (context) => CartProvider(),
+      child: Scaffold(
         appBar: AppBar(
-          title: Text("Kantin Wisaga"),
+          title: Text("Kantin Wisaga",
+              style: TextStyle(fontWeight: FontWeight.bold)),
           centerTitle: true,
           backgroundColor: Color.fromARGB(118, 103, 188, 182),
           leading: IconButton(
@@ -78,17 +74,16 @@ class _BerandaState extends State<Beranda> {
               onPressed: () {},
             ),
             IconButton(
-            icon: Icon(Icons.shopping_cart_checkout),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      ShoppingCartScreen(cartItems: [],),
-                ),
-              );
-            },
-          ),
+              icon: Icon(Icons.shopping_cart_checkout),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShoppingCartScreen(),
+                  ),
+                );
+              },
+            ),
           ],
         ),
         backgroundColor: Color.fromARGB(241, 30, 181, 204),
@@ -101,9 +96,6 @@ class _BerandaState extends State<Beranda> {
                 decoration: InputDecoration(
                   hintText: 'Search...',
                   prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
                 ),
                 onChanged: (value) {
                   // implement search logic here
@@ -111,38 +103,65 @@ class _BerandaState extends State<Beranda> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
                 itemCount: _listdata.length,
                 itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      leading: Image.asset(items[index]),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Detail(
+                            listdata: _listdata[index],
+                            image: Image.asset(items[index % items.length]), addToCart: (Map<String, dynamic> p1) {  },
+                          ),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: Text(
-                              _listdata[index]['nama_barang'],
-                              style: TextStyle(fontSize: 16.0),
+                            child: Image.asset(
+                              items[index % items.length],
+                              fit: BoxFit.cover,
                             ),
                           ),
-                          Text(
-                            "Harga: ${_listdata[index]['harga']}",
-                            style: TextStyle(fontSize: 16.0, color: Colors.red),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _listdata[index]['nama_barang'],
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  "Harga: ${_listdata[index]['harga']}",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Color.fromARGB(255, 73, 137, 148),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Detail(
-                              listdata: _listdata[index],
-                              image: Image.asset(items[index]), addToCart: (Map<String, dynamic> p1) {  },
-                            ),
-                          ),
-                        );
-                      },
                     ),
                   );
                 },

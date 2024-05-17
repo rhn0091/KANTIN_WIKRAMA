@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:kantin_wk/provider.dart';
 import 'package:provider/provider.dart';
-
-import 'login.dart';
+import 'provider.dart';  // Pastikan path benar
+import 'login.dart';  // Pastikan path benar
 
 void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => CartProvider(),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -38,22 +36,18 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              child: Icon(
-                Icons.shopify_rounded,
-                size: size.width * 0.2, 
-                color: Colors.blueGrey,
-              ),
+            Icon(
+              Icons.shopify_rounded,
+              size: size.width * 0.2,
+              color: Colors.blueGrey,
             ),
-            Container(
-              child: Text(
-                "KANTIN WISAGA",
-                style: TextStyle(
-                  fontSize: size.width * 0.06, 
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                ),
+            Text(
+              "KANTIN WISAGA",
+              style: TextStyle(
+                fontSize: size.width * 0.06,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+                color: Color.fromARGB(255, 0, 0, 0),
               ),
             ),
             SizedBox(height: size.height * 0.03), // Sesuaikan jarak antar widget
