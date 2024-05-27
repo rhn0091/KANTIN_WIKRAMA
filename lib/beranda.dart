@@ -24,6 +24,7 @@ class _BerandaState extends State<Beranda> {
     'lib/images/anggur.jpg',
     'lib/images/piscok.jpg',
     'lib/images/jus.jpg',
+    'lib/images/cilok.jpg',
   ];
 
   Future<void> _getdata() async {
@@ -121,7 +122,6 @@ class _BerandaState extends State<Beranda> {
                     ),
                   ),
                   onChanged: (value) {
-                    // Implement search logic here
                   },
                 ),
               ),

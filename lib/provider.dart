@@ -1,7 +1,11 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 
 class CartProvider with ChangeNotifier {
   List<Map<String, dynamic>> _cartItems = [];
+
+  var totalPrice;
 
   List<Map<String, dynamic>> get cartItems => _cartItems;
 
@@ -49,4 +53,11 @@ class CartProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+ String calculatetotal() {
+  double totalPrice = 0;
+  for (var item in _cartItems) {
+    totalPrice += double.parse(item['harga'].toString()) * item['quantity'];
+  }
+  return totalPrice.toStringAsFixed(2);
+}
 }

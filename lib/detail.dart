@@ -10,7 +10,8 @@ class Detail extends StatefulWidget {
   const Detail({
     Key? key,
     required this.listdata,
-    required this.image, required Null Function(Map<String, dynamic> p1) addToCart,
+    required this.image,
+    required Null Function(Map<String, dynamic> p1) addToCart,
   }) : super(key: key);
 
   @override
@@ -74,7 +75,8 @@ class _DetailState extends State<Detail> {
                   Center(
                     child: Text(
                       listdata['nama_barang'],
-                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -97,15 +99,17 @@ class _DetailState extends State<Detail> {
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Color.fromARGB(255, 120, 194, 204),
-                          onPrimary: Colors.black,
+                          foregroundColor: Colors.black,
+                          backgroundColor: Color.fromARGB(255, 120, 194, 204),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18.0),
                           ),
                         ),
                         onPressed: () {
                           bool itemAlreadyInCart = cartProvider.cartItems.any(
-                              (item) => item['nama_barang'] == listdata['nama_barang']);
+                              (item) =>
+                                  item['nama_barang'] ==
+                                  listdata['nama_barang']);
 
                           if (!itemAlreadyInCart) {
                             cartProvider.addToCart({
@@ -137,10 +141,12 @@ class _DetailState extends State<Detail> {
                           style: TextStyle(fontSize: 14),
                         ),
                         style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
                           backgroundColor: MaterialStateProperty.all<Color>(
                               Color.fromARGB(255, 120, 194, 204)),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                               side: BorderSide(
