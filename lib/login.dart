@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:kantin_wk/admin.dart';
 import 'package:kantin_wk/beranda.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,9 +26,9 @@ class _LoginPage extends State<LoginPage> {
   Future _login() async {
     print("\n=======|> memanggil fungsi _login() ");
 
-    var url = Uri.http("localhost", "/kantin/login.php", {'q': '{http}'});
+    var url = Uri.http("localhost", "kantin/login.php", {'q': '{http}'});
     var response = await http
-        .post(url, body: {"NIS": NIS.text, "password": password.text});
+        .post(url, body: {"NIS": NIS.text,"password": password.text});
 
     var data = json.decode(response.body);
 
@@ -37,6 +38,20 @@ class _LoginPage extends State<LoginPage> {
         NIS.clear();
         password.clear();
       });
+
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) =>Beranda( listdata: {},),
+    //      )
+    // );
+    // }else if(data.toString()=="admin"){
+    //   print("admin\n");
+    //   setState(() {
+    //     NIS.clear();
+    //     password.clear();
+    //   });
+    
 
       Navigator.push(
         context,
@@ -104,7 +119,6 @@ class _LoginPage extends State<LoginPage> {
               Container(
                 padding: const EdgeInsets.all(10),
                 margin: const EdgeInsets.only(top: 20),
-                 // Mengatur warna latar belakang
                 child: SizedBox(
                   
                   height: 60,

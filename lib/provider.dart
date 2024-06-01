@@ -60,4 +60,13 @@ class CartProvider with ChangeNotifier {
   }
   return totalPrice.toStringAsFixed(2);
 }
+ void clearCart() {
+    _cartItems.clear();
+    notifyListeners();
+  }
+
+  void purchaseItems() {
+    // Add your purchase logic here, such as sending data to a server
+    clearCart();
+  }
 }

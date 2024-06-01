@@ -70,15 +70,38 @@ class _BerandaState extends State<Beranda> {
               ),
             ),
           ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyApp()),
-              );
-            },
-          ),
+           leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Logout"),
+                  content: Text("Apakah Anda yakin ingin logout?"),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text("Batal"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text("Ya"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MyApp()),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
           actions: [
             IconButton(
               icon: Icon(Icons.person),
@@ -90,7 +113,9 @@ class _BerandaState extends State<Beranda> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ShoppingCartScreen(),
+                    builder: (context) => ShoppingCartScreen(
+                      
+                    ),
                   ),
                 );
               },
@@ -122,17 +147,18 @@ class _BerandaState extends State<Beranda> {
                     ),
                   ),
                   onChanged: (value) {
+                    // Add search functionality if needed
                   },
                 ),
               ),
               Expanded(
                 child: GridView.builder(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(70),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 3 / 4, // Adjust the aspect ratio as needed
+                    childAspectRatio: 3 / 4,
                   ),
                   itemCount: _listdata.length,
                   itemBuilder: (context, index) {
@@ -143,7 +169,8 @@ class _BerandaState extends State<Beranda> {
                           MaterialPageRoute(
                             builder: (context) => Detail(
                               listdata: _listdata[index],
-                              image: Image.asset(items[index % items.length]), addToCart: (Map<String, dynamic> p1) {  },
+                              image: Image.asset(items[index % items.length]),
+                              addToCart: (Map<String, dynamic> p1) {},
                             ),
                           ),
                         );
@@ -175,7 +202,7 @@ class _BerandaState extends State<Beranda> {
                                   Text(
                                     _listdata[index]['nama_barang'],
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 14, // Decreased font size
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -183,7 +210,7 @@ class _BerandaState extends State<Beranda> {
                                   Text(
                                     "Harga: ${_listdata[index]['harga']}",
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 12, // Decreased font size
                                       color: Color.fromARGB(255, 73, 137, 148),
                                     ),
                                   ),

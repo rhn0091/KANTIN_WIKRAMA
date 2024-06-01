@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:kantin_wk/provider.dart';
@@ -49,7 +51,7 @@ class ShoppingCartScreen extends StatelessWidget {
                           // ClipRRect(
                           //   borderRadius: BorderRadius.circular(8),
                           //   child: Image.asset(
-                          //     item['image'] ?? 'lib/images/default.jpg',
+                          //     item['image']?? 'lib/images/default.jpg',
                           //     height: 80,
                           //     width: 80,
                           //     fit: BoxFit.cover,
@@ -165,9 +167,53 @@ class ShoppingCartScreen extends StatelessWidget {
                             child: Text("Batal"),
                           ),
                           ElevatedButton(
-                            onPressed: () {},
-                            child: Text("Beli"),
-                          ),
+  onPressed: () async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost/kantin/koneksi.php'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'items': cartProvider.cartItems,
+          'total_harga': cartProvider.calculatetotal(),
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        for (var item in cartProvider.cartItems) {
+          await http.post(
+            Uri.parse('http://localhost/kantin/koneksi.php'),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({
+              'nama_barang': item['nama_barang'],
+              'jumlah': item['quantity'],
+            }),
+          );
+        }
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Pembelian berhasil"),
+          ),
+        );
+        cartProvider.clearCart();
+      } else {
+        // Gagal melakukan pembelian
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Pembelian gagal"),
+          ),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error: $error"),
+        ),
+      );
+    }
+  },
+  child: Text("Beli"),
+),
                         ],
                       );
                     },

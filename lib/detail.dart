@@ -18,13 +18,35 @@ class Detail extends StatefulWidget {
   State<Detail> createState() => _DetailState();
 }
 
-class _DetailState extends State<Detail> {
+class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
   late Map<String, dynamic> listdata;
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
     listdata = widget.listdata;
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeIn,
+      ),
+    );
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -61,106 +83,152 @@ class _DetailState extends State<Detail> {
       ),
       body: listdata.isEmpty
           ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: EdgeInsets.all(16.0),
-              child: ListView(
-                children: [
-                  Center(
-                    child: Container(
-                      height: 250,
-                      child: widget.image,
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  Center(
-                    child: Text(
-                      listdata['nama_barang'],
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Center(
-                    child: Text(
-                      "Stok: ${listdata['jumlah']}",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Center(
-                    child: Text(
-                      listdata['deskripsi'],
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          : FadeTransition(
+              opacity: _animation,
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black,
-                          backgroundColor: Color.fromARGB(255, 120, 194, 204),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ),
-                        ),
-                        onPressed: () {
-                          bool itemAlreadyInCart = cartProvider.cartItems.any(
-                              (item) =>
-                                  item['nama_barang'] ==
-                                  listdata['nama_barang']);
-
-                          if (!itemAlreadyInCart) {
-                            cartProvider.addToCart({
-                              ...listdata,
-                              'quantity': 1,
-                            });
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Item added to cart"),
+                      Hero(
+                        tag: "product_image_${listdata['id']}",
+                        child: Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20.0),
+                            child: Container(
+                              width: 200,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(
+                                        0, 3), // changes position of shadow
+                                  ),
+                                ],
                               ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Item already in cart"),
-                              ),
-                            );
-                          }
-                        },
-                        child: Text(
-                          "Add to cart".toUpperCase(),
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ),
-                      ElevatedButton(
-                        child: Text(
-                          "Buy now".toUpperCase(),
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromARGB(255, 120, 194, 204)),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(
-                                  color: Color.fromARGB(255, 120, 194, 204)),
+                              child: widget.image,
                             ),
                           ),
                         ),
-                        onPressed: () {
-                          // Add your Buy Now logic here
-                        },
                       ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          listdata['nama_barang'],
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87, // Ubah warna teks judul
+                          ),
+                          textAlign:
+                              TextAlign.left, // Ubah posisi teks menjadi kiri
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          "Stok: ${listdata['jumlah']}",
+                          style: TextStyle(fontSize: 16),
+                          textAlign:
+                              TextAlign.left, // Ubah posisi teks menjadi kiri
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          "Harga: ${listdata['harga']}",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.green, // Ubah warna teks harga
+                          ),
+                          textAlign:
+                              TextAlign.left, // Ubah posisi teks menjadi kiri
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          listdata['deskripsi'],
+                          style: TextStyle(fontSize: 16),
+                          textAlign: TextAlign.justify,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: [
+    ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+        primary: Colors.green,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+      ).copyWith(
+        minimumSize: MaterialStateProperty.all(Size(150, 0)),
+      ),
+      onPressed: () {
+        bool itemAlreadyInCart = cartProvider.cartItems.any(
+          (item) => item['nama_barang'] == listdata['nama_barang']
+        );
+
+        if (!itemAlreadyInCart) {
+          cartProvider.addToCart({
+            ...listdata,
+            'quantity': 1,
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Produk Masuk Keranjang"),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Produk Gagal Masuk"),
+            ),
+          );
+        }
+      },
+      icon: Icon(Icons.add_shopping_cart),
+      label: Text(
+        "Masuk Keranjang".toUpperCase(),
+        style: TextStyle(fontSize: 14),
+      ),
+    ),
+    ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: Colors.blue,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+      ).copyWith(
+        minimumSize: MaterialStateProperty.all(Size(150, 0)),
+      ),
+      onPressed: () {
+        // Add your Buy Now logic here
+      },
+      child: Text(
+        "Beli".toUpperCase(),
+        style: TextStyle(fontSize: 14),
+      ),
+    ),
+  ],
+),
+
                     ],
                   ),
-                ],
+                ),
               ),
             ),
     );
