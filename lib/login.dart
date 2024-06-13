@@ -26,7 +26,7 @@ class _LoginPage extends State<LoginPage> {
   Future _login() async {
     print("\n=======|> memanggil fungsi _login() ");
 
-    var url = Uri.http("localhost", "kantin/login.php", {'q': '{http}'});
+    var url = Uri.http("localhost", "ukk_amri/login.php", {'q': '{http}'});
     var response = await http
         .post(url, body: {"NIS": NIS.text,"password": password.text});
 

@@ -30,7 +30,7 @@ class _BerandaState extends State<Beranda> {
   Future<void> _getdata() async {
     try {
       final response =
-          await http.get(Uri.parse('http://localhost/kantin/koneksi.php'));
+          await http.get(Uri.parse('http://localhost/ukk_amri/read.php'));
 
       if (response.statusCode == 200) {
         print(response.body);

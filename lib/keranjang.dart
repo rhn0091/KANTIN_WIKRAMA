@@ -170,7 +170,7 @@ class ShoppingCartScreen extends StatelessWidget {
   onPressed: () async {
     try {
       final response = await http.post(
-        Uri.parse('http://localhost/kantin/koneksi.php'),
+        Uri.parse('http://localhost/ukk_amri/read.php'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'items': cartProvider.cartItems,
@@ -181,7 +181,7 @@ class ShoppingCartScreen extends StatelessWidget {
       if (response.statusCode == 200) {
         for (var item in cartProvider.cartItems) {
           await http.post(
-            Uri.parse('http://localhost/kantin/koneksi.php'),
+            Uri.parse('http://localhost/ukk_amri/read.php'),
             headers: {'Content-Type': 'application/json'},
             body: json.encode({
               'nama_barang': item['nama_barang'],
